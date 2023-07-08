@@ -8,10 +8,10 @@
           <UnlockDevice @unlockCompleted="this.activeStep = 3" :manufacturer="manufacturer"/>
         </o-step-item>
         <o-step-item step="3" label="Files">
-          <FlashConfigurator @flash="data => startFlashing(data)"/>
+          <FlashConfigurator v-if="this.activeStep == 3" @flash="data => startFlashing(data)"/>
         </o-step-item>
         <o-step-item step="4" label="Install">
-          <Flashing :data="flashDetails" />
+          <Flashing v-if="this.activeStep == 4" :data="flashDetails" />
         </o-step-item>
       </main>
     </o-steps>
