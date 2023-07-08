@@ -43,6 +43,16 @@ const emit = defineEmits(['flash'])
 const dropFiles = ref([])
 const data = ref([])
 const slotToggle = ref('a')
+
+window.device.getVariable("current-slot").then((slot) => {
+  if (slot == "b") {
+    slotToggle.value = "b"
+  }
+  else {
+    slotToggle.value = "a"
+  }
+})
+
 const wipeToggle = ref(false)
 const verityToggle = ref(false)
 const hasVbmeta = ref(false)
