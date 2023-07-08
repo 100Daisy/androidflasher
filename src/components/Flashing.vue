@@ -1,6 +1,6 @@
 <template>
     <main>
-      <o-icon @click="startFlashing()" icon="flash" size="large" />
+      <o-icon icon="flash" size="large" />
       <ProgressBar :progress="progress" :parts="data.quantity"/>
     </main>
 </template>
@@ -8,6 +8,8 @@
 <script setup>
 import { defineProps, ref } from 'vue';
 import ProgressBar from './ProgressBar.vue';
+import Swal from 'sweetalert2';
+
 // define files and data props
 const props = defineProps({
     data: {
@@ -17,18 +19,26 @@ const props = defineProps({
 });
 
 const progress = ref(0);
-
 async function startFlashing() {
   progress.value = 0;
   let curr_progress = -1;
   for (let i = 0; i < props.data.quantity; i++) {
     curr_progress++;
+    await window.device.runCommand(`set_active:${props.data.data[i].slot}`);
     await window.device.flashBlob(props.data.data[i].partition, props.data.files[i], (t) => {
       // take progress.value every iteration and add progress to it
       progress.value = curr_progress + t;
     })
   }
 }
+startFlashing().then(() => {
+  Swal.fire({
+    title: 'Flashing completed',
+    text: 'Congratulations! You have successfully flashed your device!',
+    icon: 'success',
+  })
+})
+
 </script>
 
 <style scoped>

@@ -24,9 +24,9 @@
             </o-upload>
         </o-field>
         <o-field>
-            <o-switch>Clean Flash</o-switch>
-            <o-switch>Disable Verity</o-switch>
-            <o-switch true-value="_a" false-value="_b">A/B</o-switch>
+            <o-switch v-model="wipeToggle">Clean Flash</o-switch>
+            <o-switch :disabled="!hasVbmeta" v-model="verityToggle">Disable Verity</o-switch>
+            <o-switch v-model="slotToggle" true-value="b" false-value="a">A/B</o-switch>
         </o-field>
         <o-field>
             <o-button @click="startFlash()">Flash</o-button>
@@ -42,7 +42,20 @@ const emit = defineEmits(['flash'])
 
 const dropFiles = ref([])
 const data = ref([])
+const slotToggle = ref('a')
 
+window.device.getVariable("current-slot").then((slot) => {
+  if (slot == "b") {
+    slotToggle.value = "b"
+  }
+  else {
+    slotToggle.value = "a"
+  }
+})
+
+const wipeToggle = ref(false)
+const verityToggle = ref(false)
+const hasVbmeta = ref(false)
 const columns = ref([
   {
     field: 'id',
@@ -78,26 +91,30 @@ const columns = ref([
 ])
 
 const deleteDropFile = (index) => {
+  if (dropFiles.value[index].name.split('.')[0] == "vbmeta") {
+    hasVbmeta.value = false;
+    verityToggle.value = false;
+  }
   dropFiles.value.splice(index, 1)
   data.value.splice(index, 1)
 }
 
 const setFlashSlot = (index) => {
-  console.log(index)
   data.value[index].slot = data.value[index].slot == 'a' ? 'b' : 'a'
 }
 
 watch(dropFiles, (newDropFiles) => {
-  data.value = []
-  for (let i = 0; i < newDropFiles.length; i++) {
+  for (let i = data.value.length; i < newDropFiles.length; i++) {
     let file = {
       id: i,
       filename: newDropFiles[i].name,
       partition: newDropFiles[i].name.split('.')[0],
       size: (newDropFiles[i].size / 1024 / 1024).toFixed(2) + ' MB',
-      slot: 'a'
+      slot: slotToggle.value
     }
     data.value.push(file)
+
+    if (newDropFiles[i].name.split('.')[0] == "vbmeta") hasVbmeta.value = true;
   }
 }, { deep: true })
 
@@ -113,7 +130,12 @@ const startFlash = () => {
     const ret = {
       files: dropFiles.value,
       data: data.value,
-      quantity: dropFiles.value.length
+      quantity: dropFiles.value.length,
+      options: {
+        cleanFlash: wipeToggle.value,
+        disableVerity: verityToggle.value,
+        ab: slotToggle.value
+      }
     }
     emit('flash', ret)
 }
