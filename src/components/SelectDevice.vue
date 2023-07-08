@@ -1,0 +1,57 @@
+<template>
+  <main>
+      <h1>Getting Started</h1>
+      <img @click="selectDevice()" src="../assets/android_devices.svg">
+      <p>Window will appear, you need to choose device you want to flash on. Fastboot mode is required.</p>
+  </main>
+</template>n
+
+<script>
+import * as fastboot from "android-fastboot";
+export default {
+  name: 'SelectDevice',
+  methods: {
+    async selectDevice() {
+      let device = new fastboot.FastbootDevice();
+      window.device = device;
+      await device.connect()
+      this.$emit('deviceIsConnected', device)
+    }
+  }
+}
+</script>
+ 
+<style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Narnoor&family=Tilt+Neon&display=swap');
+main {
+  align-items: center;
+  flex-direction: column;
+  background-color: #f5f5f5;
+  border-radius: 25px;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+img {
+  width: 50%;
+  max-width: 512px;
+  height: auto;
+  cursor: pointer;
+}
+
+p {
+  margin: 0px;
+  padding: 30px;
+  color: #3DDB85;
+  font-family: 'Narnoor', serif;
+  font-weight: bold;
+  font-size: 26px;
+  border-radius: 25px;
+  width: 100%;
+}
+
+h1 {
+  margin: 0px;
+  padding: 20px;
+}
+</style>
