@@ -23,6 +23,7 @@ async function startFlashing() {
   let curr_progress = -1;
   for (let i = 0; i < props.data.quantity; i++) {
     curr_progress++;
+    await window.device.runCommand(`set_active:${props.data.data[i].slot}`);
     await window.device.flashBlob(props.data.data[i].partition, props.data.files[i], (t) => {
       // take progress.value every iteration and add progress to it
       progress.value = curr_progress + t;
