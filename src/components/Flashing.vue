@@ -42,7 +42,12 @@ async function startFlashing() {
       progress.value = curr_progress + t;
     })
   }
+  if (props.data.options.cleanFlash) {
+    latestLine.value = 'Erasing userdata...';
+    await window.device.runCommand(`erase:userdata`);
+  }
 }
+
 startFlashing().then(() => {
   Swal.fire({
     title: 'Flashing completed',
