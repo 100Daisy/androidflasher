@@ -11,6 +11,7 @@ import { defineProps, ref } from 'vue';
 import ProgressBar from './ProgressBar.vue';
 import Swal from 'sweetalert2';
 import FlashLog from './FlashLog.vue';
+import disableVerifyVbmeta from 'vbmeta-disabler';
 // define files and data props
 const props = defineProps({
     data: {
@@ -28,6 +29,14 @@ async function startFlashing() {
     curr_progress++;
     await window.device.runCommand(`set_active:${props.data.data[i].slot}`);
     latestLine.value = `Flashing ${props.data.files[i].name}...`;
+    if (props.data.options.disableVerity && props.data.data[i].partition == 'vbmeta') {
+      const vbmeta = await disableVerifyVbmeta(props.data.files[i]);
+      await window.device.flashBlob(props.data.data[i].partition, vbmeta, (t) => {
+        // take progress.value every iteration and add progress to it
+        progress.value = curr_progress + t;
+      })
+      continue;
+    }
     await window.device.flashBlob(props.data.data[i].partition, props.data.files[i], (t) => {
       // take progress.value every iteration and add progress to it
       progress.value = curr_progress + t;
