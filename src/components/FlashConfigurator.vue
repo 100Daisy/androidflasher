@@ -52,10 +52,10 @@ const slotToggle = ref('a')
 
 window.device.getVariable("current-slot").then((slot) => {
   if (slot == "b") {
-    slotToggle.value = "b"
+    slotToggle.value = "a"
   }
   else {
-    slotToggle.value = "a"
+    slotToggle.value = "b"
   }
 })
 
@@ -158,8 +158,8 @@ main {
 }
 
 .o-switch {
-    flex-direction: column;
-    margin: 20px 20px;
+  flex-direction: column;
+  margin: 20px 20px;
 }
 
 .o-tip {
@@ -167,13 +167,13 @@ main {
 }
 
 main {
-    --oruga-input-max-width: 100%;
+  --oruga-input-max-width: 100%;
 }
 
 .o-field {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
 }
 
