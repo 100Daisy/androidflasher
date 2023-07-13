@@ -101,10 +101,14 @@ export default {
 }
 
 :root { 
-  --oruga-steps-active-color: #3DDB85;
-  --oruga-steps-previous-color: #3DDB85;
+  --oruga-steps-active-color: black;
+  --oruga-steps-previous-color: black;
   --oruga-input-max-width: 25%;
   --oruga-switch-margin-label: 0px;
+  --oruga-button-background-color: black;
+  --oruga-switch-active-background-color: black;
+  --oruga-tooltip-background-color: black;
+  --oruga-steps-divider-color: black;
 }
 
 .o-steps__wrapper-vertical .o-steps__title {

@@ -1,8 +1,7 @@
 <template>
   <main>
-      <h1>Getting Started</h1>
       <img @click="selectDevice()" src="../assets/android_devices.svg">
-      <p>Window will appear, you need to choose device you want to flash on. Fastboot mode is required.</p>
+      <p>Choose your device</p>
   </main>
 </template>n
 
@@ -42,7 +41,7 @@ img {
 p {
   margin: 0px;
   padding: 30px;
-  color: #3DDB85;
+  color: #2c3e50;
   font-family: 'Narnoor', serif;
   font-weight: bold;
   font-size: 26px;

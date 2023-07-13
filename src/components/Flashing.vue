@@ -1,6 +1,6 @@
 <template>
     <main>
-      <o-icon icon="flash" size="large" />
+      <o-icon icon="bolt" size="large" />
       <ProgressBar :progress="progress" :parts="data.quantity"/>
     </main>
 </template>
@@ -48,12 +48,7 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-}
-
-.o-icon {
-  margin: 1em;
-  flex: 1;
+  justify-content: space-evenly;
 }
 </style>
 
