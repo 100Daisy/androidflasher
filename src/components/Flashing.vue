@@ -1,6 +1,7 @@
 <template>
     <main>
       <o-icon icon="bolt" size="large" />
+      <FlashLog :latest-line="latestLine" :opacity-decrease="0.3" :maxLines="6"/>
       <ProgressBar :progress="progress" :parts="data.quantity"/>
     </main>
 </template>
@@ -9,7 +10,7 @@
 import { defineProps, ref } from 'vue';
 import ProgressBar from './ProgressBar.vue';
 import Swal from 'sweetalert2';
-
+import FlashLog from './FlashLog.vue';
 // define files and data props
 const props = defineProps({
     data: {
@@ -18,6 +19,7 @@ const props = defineProps({
     }
 });
 
+const latestLine = ref('');
 const progress = ref(0);
 async function startFlashing() {
   progress.value = 0;
@@ -25,6 +27,7 @@ async function startFlashing() {
   for (let i = 0; i < props.data.quantity; i++) {
     curr_progress++;
     await window.device.runCommand(`set_active:${props.data.data[i].slot}`);
+    latestLine.value = `Flashing ${props.data.files[i].name}...`;
     await window.device.flashBlob(props.data.data[i].partition, props.data.files[i], (t) => {
       // take progress.value every iteration and add progress to it
       progress.value = curr_progress + t;
