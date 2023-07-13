@@ -1,4 +1,5 @@
 <template>
+  <section>
     <o-steps :has-navigation=false v-model="activeStep">
       <main>
         <o-step-item step="1" label="Device">
@@ -15,6 +16,19 @@
         </o-step-item>
       </main>
     </o-steps>
+    <section id="fot">
+      <footer>
+        <span>
+          Made with <o-icon icon="heart"/> by <a href="https://github.com/100Daisy" target="_blank">100Daisy</a>
+        </span>
+        <span id="icons">
+          <o-icon clickable @click="redirect('https://paypal.me/100Daisy')" size="medium" pack="fab" icon="paypal"/>
+          <o-icon clickable @click="redirect('https://www.patreon.com/100Daisy')" size="medium" pack="fab" icon="patreon"/>
+          <o-icon clickable @click="redirect('https://github.com/100Daisy/androidflasher')" size="medium" pack="fab" icon="github"/>
+        </span>
+      </footer>
+    </section>
+  </section>
 </template>
 
 <script>
@@ -41,6 +55,9 @@ export default {
     }
   },
   methods: {
+    redirect(url) {
+      window.open(url, '_self')
+    },
     startFlashing(data) {
       this.activeStep = 4
       this.flashDetails = data
@@ -101,9 +118,57 @@ export default {
 main {
   height: 900px;
   margin: auto;
-  width: 70%;
+  width: 90%;
 }
 .o-side__content {
   border-radius: 25px 0px 0px 25px;
 }
+.o-upl {
+  /* margin: 20px; */
+  height: 100%;
+}
+/* .o-icon {
+  margin: 1em;
+  flex: 1;
+} */
+.o-pag {
+  padding: 20px 0px;
+}
+
+.o-table__root {
+  /* height: 540px; */
+}
+
+.o-upl__draggable {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#fot {
+  display: flex;
+  justify-content: center;
+  margin-top: 3.5%;
+}
+
+#icons {
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+#icons .o-icon {
+  margin: 0px 15px;
+  color: #d8d8d8;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:visited {
+  color: black;
+}
+
+
 </style>
