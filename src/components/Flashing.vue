@@ -39,6 +39,11 @@ startFlashing().then(() => {
     title: 'Flashing completed',
     text: 'Congratulations! You have successfully flashed your device!',
     icon: 'success',
+    confirmButtonText: 'Reboot'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.device.reboot()
+    }
   })
 })
 
