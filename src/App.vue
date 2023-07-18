@@ -1,36 +1,3 @@
-<template>
-  <section>
-    <o-steps :has-navigation=false v-model="activeStep">
-      <main>
-        <o-step-item step="1" label="Device">
-          <SelectDevice @deviceIsConnected="checkUnlockState"/>
-        </o-step-item>
-        <o-step-item step="2" label="Unlock">
-          <UnlockDevice @unlockCompleted="activeStep = 3" :manufacturer="manufacturer"/>
-        </o-step-item>
-        <o-step-item step="3" label="Files">
-          <FlashConfigurator v-if="activeStep == 3" @flash="data => startFlashing(data)"/>
-        </o-step-item>
-        <o-step-item step="4" label="Install">
-          <Flashing v-if="activeStep == 4" :data="flashDetails" />
-        </o-step-item>
-      </main>
-    </o-steps>
-    <section id="fot">
-      <footer>
-        <span>
-          Made with <o-icon icon="heart"/> by <a href="https://github.com/100Daisy" target="_blank">100Daisy</a>
-        </span>
-        <span id="icons">
-          <o-icon clickable @click="redirect('https://paypal.me/100Daisy')" size="medium" pack="fab" icon="paypal"/>
-          <o-icon clickable @click="redirect('https://www.patreon.com/100Daisy')" size="medium" pack="fab" icon="patreon"/>
-          <o-icon clickable @click="redirect('https://github.com/100Daisy/androidflasher')" size="medium" pack="fab" icon="github"/>
-        </span>
-      </footer>
-    </section>
-  </section>
-</template>
-
 <script setup>
 import Swal from 'sweetalert2'
 import UnlockDevice from './components/UnlockDevice.vue'
@@ -77,6 +44,38 @@ async function checkUnlockState(device) {
 }
 </script>
 
+<template>
+  <section>
+    <o-steps :has-navigation=false v-model="activeStep">
+      <main>
+        <o-step-item step="1" label="Device">
+          <SelectDevice @deviceIsConnected="checkUnlockState"/>
+        </o-step-item>
+        <o-step-item step="2" label="Unlock">
+          <UnlockDevice @unlockCompleted="activeStep = 3" :manufacturer="manufacturer"/>
+        </o-step-item>
+        <o-step-item step="3" label="Files">
+          <FlashConfigurator v-if="activeStep == 3" @flash="data => startFlashing(data)"/>
+        </o-step-item>
+        <o-step-item step="4" label="Install">
+          <Flashing v-if="activeStep == 4" :data="flashDetails" />
+        </o-step-item>
+      </main>
+    </o-steps>
+    <section id="fot">
+      <footer>
+        <span>
+          Made with <o-icon icon="heart"/> by <a href="https://github.com/100Daisy" target="_blank">100Daisy</a>
+        </span>
+        <span id="icons">
+          <o-icon clickable @click="redirect('https://paypal.me/100Daisy')" size="medium" pack="fab" icon="paypal"/>
+          <o-icon clickable @click="redirect('https://www.patreon.com/100Daisy')" size="medium" pack="fab" icon="patreon"/>
+          <o-icon clickable @click="redirect('https://github.com/100Daisy/androidflasher')" size="medium" pack="fab" icon="github"/>
+        </span>
+      </footer>
+    </section>
+  </section>
+</template>
 
 <style>
 #app {
@@ -158,6 +157,4 @@ a {
 a:visited {
   color: black;
 }
-
-
 </style>

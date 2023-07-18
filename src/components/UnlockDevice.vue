@@ -1,10 +1,3 @@
-<template>
-    <main>
-        <UnlockMotorola v-if="manufacturer == 'Motorola Mobility LLC.'" @unlockCompleted="this.$emit('unlockCompleted', true)" id="test"/>
-        <!-- <o-button @click="getUnlockTutorial()">I need more help</o-button> -->
-    </main>
-  </template>
-  
 <script setup>
 import { defineProps} from 'vue';
 import Swal from 'sweetalert2';
@@ -43,6 +36,13 @@ async function getUnlockTutorial() {
     }
 }
 </script>
+
+<template>
+    <main>
+        <UnlockMotorola v-if="manufacturer == 'Motorola Mobility LLC.'" @unlockCompleted="this.$emit('unlockCompleted', true)" id="test"/>
+        <!-- <o-button @click="getUnlockTutorial()">I need more help</o-button> -->
+    </main>
+</template>
    
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Narnoor&family=Tilt+Neon&display=swap');

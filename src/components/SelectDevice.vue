@@ -1,10 +1,3 @@
-<template>
-  <main>
-      <img @click="selectDevice()" src="../assets/android_devices.svg">
-      <p>Choose your device</p>
-  </main>
-</template>n
-
 <script setup>
 import { defineEmits } from "vue";
 import * as fastboot from "android-fastboot";
@@ -18,6 +11,13 @@ async function selectDevice() {
   emit('deviceIsConnected', fastbootDevice);
 };
 </script>
+
+<template>
+  <main>
+      <img @click="selectDevice()" src="../assets/android_devices.svg">
+      <p>Choose your device</p>
+  </main>
+</template>
  
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Narnoor&family=Tilt+Neon&display=swap');

@@ -1,45 +1,3 @@
-<template>
-    <main>
-
-        <o-field id="test" :addons="false">
-            <o-table v-if="dropFiles.length > 0" :paginated="dropFiles.length > 0" :per-page="7" :striped="true" :data="data">
-                <o-table-column
-                    v-for="column in columns"
-                    v-bind="column"
-                    #default="{ row }">
-                    <span v-if="column.field !== 'slot' && column.field !== 'partition'">{{ row[column.field] }}</span>
-                    <o-button v-if="column.field == 'slot'" @click="setFlashSlot(row.id)" color="is-danger">{{ row.slot }}</o-button>
-                    <o-input v-model="row.partition"  v-if="column.field == 'partition'"></o-input>
-                    <o-button v-if="column.field == 'deleteButton'" @click="deleteDropFile(row.id)" color="is-danger">Delete</o-button>
-                </o-table-column>
-            </o-table>
-            <o-upload v-model="dropFiles" multiple drag-drop>
-                <section class="ex-center">
-                <p>
-                    <o-icon icon="file-upload" size="large">
-                    </o-icon>
-                </p>
-                <p>Drop your files</p>
-                </section>
-            </o-upload>
-        </o-field>
-        <o-field id="toggles">
-          <o-tooltip label="This will wipe your phone">
-            <o-switch v-model="wipeToggle">Wipe Data</o-switch>
-          </o-tooltip>
-          <o-tooltip label="Allow booting unsigned images">
-            <o-switch :disabled="!hasVbmeta" v-model="verityToggle">Disable Verity</o-switch>
-          </o-tooltip>
-          <o-tooltip label="Choose between A or B slot">
-            <o-switch v-model="slotToggle" true-value="b" false-value="a">A/B</o-switch>
-          </o-tooltip>
-        </o-field>
-        <o-field id="flash">
-            <o-button size="large" @click="startFlash()">Flash</o-button>
-        </o-field>
-    </main>
-</template>
-
 <script setup>
 import Swal from 'sweetalert2'
 import { ref, watch, defineEmits } from 'vue'
@@ -146,6 +104,47 @@ const startFlash = () => {
     emit('flash', ret)
 }
 </script>
+
+<template>
+    <main>
+        <o-field id="test" :addons="false">
+            <o-table v-if="dropFiles.length > 0" :paginated="dropFiles.length > 0" :per-page="7" :striped="true" :data="data">
+                <o-table-column
+                    v-for="column in columns"
+                    v-bind="column"
+                    #default="{ row }">
+                    <span v-if="column.field !== 'slot' && column.field !== 'partition'">{{ row[column.field] }}</span>
+                    <o-button v-if="column.field == 'slot'" @click="setFlashSlot(row.id)" color="is-danger">{{ row.slot }}</o-button>
+                    <o-input v-model="row.partition"  v-if="column.field == 'partition'"></o-input>
+                    <o-button v-if="column.field == 'deleteButton'" @click="deleteDropFile(row.id)" color="is-danger">Delete</o-button>
+                </o-table-column>
+            </o-table>
+            <o-upload v-model="dropFiles" multiple drag-drop>
+                <section class="ex-center">
+                <p>
+                    <o-icon icon="file-upload" size="large">
+                    </o-icon>
+                </p>
+                <p>Drop your files</p>
+                </section>
+            </o-upload>
+        </o-field>
+        <o-field id="toggles">
+          <o-tooltip label="This will wipe your phone">
+            <o-switch v-model="wipeToggle">Wipe Data</o-switch>
+          </o-tooltip>
+          <o-tooltip label="Allow booting unsigned images">
+            <o-switch :disabled="!hasVbmeta" v-model="verityToggle">Disable Verity</o-switch>
+          </o-tooltip>
+          <o-tooltip label="Choose between A or B slot">
+            <o-switch v-model="slotToggle" true-value="b" false-value="a">A/B</o-switch>
+          </o-tooltip>
+        </o-field>
+        <o-field id="flash">
+            <o-button size="large" @click="startFlash()">Flash</o-button>
+        </o-field>
+    </main>
+</template>
 
 <style scoped>
 main {

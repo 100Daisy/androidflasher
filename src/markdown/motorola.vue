@@ -1,21 +1,3 @@
-<template>
-    <main>
-        <o-steps :animated=false v-model="activeStep" :hasNavigation=false vertical>
-            <o-step-item :step=1>
-                <o-button href="google.com" @click="getUnlockData()">Get Unlock Data</o-button>
-            </o-step-item>
-            <o-step-item :step=2>
-                <o-button @click="goToSite()">Visit Motorola Site</o-button>
-                <p>Unlock data is already copied to your clipboard</p>
-            </o-step-item>
-            <o-step-item :step=3>
-                <o-input v-model="unlockCode" />
-                <o-button @click="unlockWithCode()">Unlock</o-button>
-            </o-step-item>
-        </o-steps>
-    </main>
-</template>
-
 <script setup>
 import Swal from 'sweetalert2';
 import { ref } from 'vue'
@@ -51,6 +33,24 @@ async function unlockWithCode() {
 }
 
 </script>
+
+<template>
+    <main>
+        <o-steps :animated=false v-model="activeStep" :hasNavigation=false vertical>
+            <o-step-item :step=1>
+                <o-button href="google.com" @click="getUnlockData()">Get Unlock Data</o-button>
+            </o-step-item>
+            <o-step-item :step=2>
+                <o-button @click="goToSite()">Visit Motorola Site</o-button>
+                <p>Unlock data is already copied to your clipboard</p>
+            </o-step-item>
+            <o-step-item :step=3>
+                <o-input v-model="unlockCode" />
+                <o-button @click="unlockWithCode()">Unlock</o-button>
+            </o-step-item>
+        </o-steps>
+    </main>
+</template>
 
 <style scoped>
 p {

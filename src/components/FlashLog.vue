@@ -1,11 +1,3 @@
-<template>
-  <div class="horizontal-text" :style="calcHeight()">
-      <div class="line" v-for="(line, index) in displayLines" :key="index" :style="getLineStyles(index)">
-        {{ line }}
-      </div>
-  </div>
-</template>
-
 <script setup>
 import { ref, watch } from 'vue';
 
@@ -46,6 +38,13 @@ const getLineStyles = (index) => {
 };
 </script>
 
+<template>
+  <div class="horizontal-text" :style="calcHeight()">
+      <div class="line" v-for="(line, index) in displayLines" :key="index" :style="getLineStyles(index)">
+        {{ line }}
+      </div>
+  </div>
+</template>
 
 <style scoped>
 .horizontal-text {

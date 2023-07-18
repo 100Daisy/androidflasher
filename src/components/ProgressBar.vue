@@ -1,9 +1,3 @@
-<template>
-    <div class="progress-bar">
-        <div class="progress-bar__fill" :style="{ width: fillWidth }"></div>
-    </div>
-</template>
-
 <script setup>
 import { ref, computed } from 'vue';
 
@@ -18,6 +12,11 @@ const fillWidth = computed(() => {
 });
 </script>
 
+<template>
+  <div class="progress-bar">
+      <div class="progress-bar__fill" :style="{ width: fillWidth }"></div>
+  </div>
+</template>
 
 <style>
 .progress-bar {

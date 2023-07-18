@@ -1,11 +1,3 @@
-<template>
-    <main>
-      <o-icon icon="bolt" size="large" />
-      <FlashLog :latest-line="latestLine" :opacity-decrease="0.3" :maxLines="6"/>
-      <ProgressBar :progress="progress" :parts="data.quantity"/>
-    </main>
-</template>
-
 <script setup>
 import { defineProps, ref } from 'vue';
 import ProgressBar from './ProgressBar.vue';
@@ -62,6 +54,14 @@ startFlashing().then(() => {
 })
 
 </script>
+
+<template>
+    <main>
+      <o-icon icon="bolt" size="large" />
+      <FlashLog :latest-line="latestLine" :opacity-decrease="0.3" :maxLines="6"/>
+      <ProgressBar :progress="progress" :parts="data.quantity"/>
+    </main>
+</template>
 
 <style scoped>
 main {
