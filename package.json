@@ -14,7 +14,6 @@
     "@fortawesome/free-brands-svg-icons": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/vue-fontawesome": "^3.0.3",
-    "@mdi/font": "^7.2.96",
     "@oruga-ui/oruga-next": "^0.6.0",
     "android-device-list": "^1.2.10",
     "android-fastboot": "^1.1.3",
