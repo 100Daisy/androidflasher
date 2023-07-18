@@ -6,52 +6,46 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, watch } from 'vue';
 
-export default {
-  name: 'HorizontalText',
-  props: {
-    latestLine: {
-      type: String,
-      required: true
-    },
-    opacityDecrease: {
-      type: Number,
-      default: 0.1
-    },
-    maxLines: {
-      type: Number,
-      default: 5 // Set your desired default maximum number of lines
-    }
+const props = defineProps({
+  latestLine: {
+    type: String,
+    required: true,
   },
-  data() {
-    return {
-      displayLines: []
-    };
+  opacityDecrease: {
+    type: Number,
+    default: 0.1,
   },
-  watch: {
-    latestLine(newLine) {
-      this.displayLines.unshift(newLine);
-      if (this.displayLines.length > this.maxLines) {
-        this.displayLines.pop();
-      }
-    }
+  maxLines: {
+    type: Number,
+    default: 5,
   },
-  methods: {
-    calcHeight() {
-      return {
-        height: `${this.maxLines * 25}px`
-      };
-    },
-    getLineStyles(index) {
-      const opacity = 1 - index * this.opacityDecrease;
-      return {
-        opacity: opacity
-      };
-    }
+});
+
+const displayLines = ref([]);
+watch(() => props.latestLine, (newLine) => {
+  displayLines.value.unshift(newLine);
+  if (displayLines.value.length > props.maxLines) {
+    displayLines.value.pop();
   }
+});
+
+const calcHeight = () => {
+  return {
+    height: `${props.maxLines * 25}px`,
+  };
+};
+
+const getLineStyles = (index) => {
+  const opacity = 1 - index * props.opacityDecrease;
+  return {
+    opacity,
+  };
 };
 </script>
+
 
 <style scoped>
 .horizontal-text {

@@ -5,19 +5,18 @@
   </main>
 </template>n
 
-<script>
+<script setup>
+import { defineEmits } from "vue";
 import * as fastboot from "android-fastboot";
-export default {
-  name: 'SelectDevice',
-  methods: {
-    async selectDevice() {
-      let device = new fastboot.FastbootDevice();
-      window.device = device;
-      await device.connect()
-      this.$emit('deviceIsConnected', device)
-    }
-  }
-}
+
+// declare emits
+const emit = defineEmits(['deviceIsConnected']);
+async function selectDevice() {
+  let fastbootDevice = new fastboot.FastbootDevice();
+  await fastbootDevice.connect();
+  window.device = fastbootDevice;
+  emit('deviceIsConnected', fastbootDevice);
+};
 </script>
  
 <style scoped>

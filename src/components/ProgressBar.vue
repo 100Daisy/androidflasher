@@ -4,31 +4,20 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: 'ProgressBar',
-    props: {
-        progress: {
-            type: Number,
-            required: true,
-        },
-        parts: {
-            type: Number,
-            required: true,
-            validator: (value) => value >= 0,
-        },
-    },
-    computed: {
-        fillWidth() {
-            if (this.progress >= this.parts) {
-                return '100%';
-            } else {
-                return (this.progress / this.parts) * 100 + '%';
-            }
-        },
-    },
-};
+<script setup>
+import { ref, computed } from 'vue';
+
+const props = defineProps(['progress', 'parts']);
+
+const fillWidth = computed(() => {
+  if (props.progress >= props.parts) {
+    return '100%';
+  } else {
+    return (props.progress / props.parts) * 100 + '%';
+  }
+});
 </script>
+
 
 <style>
 .progress-bar {

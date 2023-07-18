@@ -6,13 +6,13 @@
           <SelectDevice @deviceIsConnected="checkUnlockState"/>
         </o-step-item>
         <o-step-item step="2" label="Unlock">
-          <UnlockDevice @unlockCompleted="this.activeStep = 3" :manufacturer="manufacturer"/>
+          <UnlockDevice @unlockCompleted="activeStep = 3" :manufacturer="manufacturer"/>
         </o-step-item>
         <o-step-item step="3" label="Files">
-          <FlashConfigurator v-if="this.activeStep == 3" @flash="data => startFlashing(data)"/>
+          <FlashConfigurator v-if="activeStep == 3" @flash="data => startFlashing(data)"/>
         </o-step-item>
         <o-step-item step="4" label="Install">
-          <Flashing v-if="this.activeStep == 4" :data="flashDetails" />
+          <Flashing v-if="activeStep == 4" :data="flashDetails" />
         </o-step-item>
       </main>
     </o-steps>
@@ -31,66 +31,52 @@
   </section>
 </template>
 
-<script>
+<script setup>
 import Swal from 'sweetalert2'
 import UnlockDevice from './components/UnlockDevice.vue'
 import SelectDevice from './components/SelectDevice.vue'
 import FlashConfigurator from './components/FlashConfigurator.vue'
 import Flashing from './components/Flashing.vue'
+import { ref } from 'vue'
 
-export default {
-  components: {
-    SelectDevice,
-    UnlockDevice,
-    FlashConfigurator,
-    Flashing
-},
-  name: 'App',
-  data() {
-    return {
-      activeStep: 1,
-      showSocial: true,
-      device: null,
-      flashDetails: {},
-    }
-  },
-  methods: {
-    redirect(url) {
-      window.open(url, '_self')
-    },
-    startFlashing(data) {
-      this.activeStep = 4
-      this.flashDetails = data
-    },
-    async checkUnlockState(device) {
-      this.device = device
-      this.manufacturer = device.device.manufacturerName
-      device.getVariable('unlocked').then(async (unlocked) => {
-        if (unlocked == 'no') {
-          this.showSocial = true
-          return
-        }
-        Swal.fire({
-          title: 'Device unlocked ?',
-          text: 'We are unable to detect device unlock state, make sure you have unlocked your device and proceed.',
-          icon: 'question',
-          confirmButtonText: 'Unlocked',
-          denyButtonText: 'Help Me!',
-          showDenyButton: true,
-          reverseButtons: true
-        }).then(async (result) => {
-          if (result.isDenied) {
-            this.showSocial = true
-            this.activeStep = 2
-            return
-          }
-          this.activeStep = 3
-        })
-      })
-    }
+const activeStep = ref(1)
+const flashDetails = ref()
+
+function redirect(url) {
+  window.open(url, '_self')
+}
+
+function startFlashing(data) {
+  activeStep.value = 4
+  flashDetails.value = data
+}
+
+async function checkUnlockState(device) {
+  const unlocked = await device.getVariable('unlocked')
+
+  if (unlocked === 'no') {
+    activeStep.value = 2
+    return
   }
+
+  const result = await Swal.fire({
+    title: 'Device unlocked?',
+    text: 'We are unable to detect the device unlock state, make sure you have unlocked your device and proceed.',
+    icon: 'question',
+    confirmButtonText: 'Unlocked',
+    denyButtonText: 'Help Me!',
+    showDenyButton: true,
+    reverseButtons: true
+  })
+  console.log(result)
+  if (result.isDenied) {
+    activeStep.value = 2
+    return
+  }
+  activeStep.value = 3
 }
 </script>
+
 
 <style>
 #app {

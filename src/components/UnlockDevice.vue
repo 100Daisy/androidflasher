@@ -5,47 +5,42 @@
     </main>
   </template>
   
-<script>
-import Swal from 'sweetalert2'
-import UnlockMotorola from '../markdown/motorola.vue'
-import androidDevices from 'android-device-list'
-export default {
-    name: 'SelectDevice',
-    props: {
-        manufacturer: {
-            type: String,
-            required: true
+<script setup>
+import { defineProps} from 'vue';
+import Swal from 'sweetalert2';
+import UnlockMotorola from '../markdown/motorola.vue';
+import androidDevices from 'android-device-list';
+
+
+const props = defineProps({
+    manufacturer: {
+        type: String,
+        required: true,
+    },
+});
+
+const devices = [];
+
+async function getUnlockTutorial() {
+    const product = await window.device.getVariable('product');
+    // choose last from the list of devices
+    const deviceName = await androidDevices.getDevicesByDeviceId(product);
+    // prepare list of devices
+    if (deviceName.length > 0) {
+        devices.value = deviceName.map((device) => device.name);
+        const result = await Swal.fire({
+            title: 'Multiple devices detected',
+            text: 'Your product matches multiple devices, please choose one from the list',
+            icon: 'question',
+            input: 'select',
+            inputOptions: devices.value,
+            confirmButtonText: 'Choose',
+        });
+        if (result.isConfirmed) {
+            const selectedDevice = devices.value[result.value];
+            window.open(`https://www.google.com/search?q=how+to+unlock+bootloader+android+device+${selectedDevice}`, '_blank');
         }
-    },
-    components: {
-        UnlockMotorola
-    },
-    methods: {
-        async getUnlockTutorial() {
-            const product = await window.device.getVariable('product')
-            // choose last from the list of devices
-            const deviceName = await androidDevices.getDevicesByDeviceId(product)
-            // prepare list of devices
-            if (deviceName.length > 0) {
-                const devices = deviceName.map((device) => {
-                    return device.name
-                })
-                await Swal.fire({
-                    title: 'Multiple devices detected',
-                    text: 'Your product matches multiple devices, please choose one from the list',
-                    icon: 'question',
-                    input: 'select',
-                    inputOptions: devices,
-                    confirmButtonText: 'Choose',
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        const device = devices[result.value]
-                        window.open(`https://www.google.com/search?q=how+to+unlock+bootloader+android+device+${device}`, '_blank')
-                    }
-                })
-            }   
-        }
-    },
+    }
 }
 </script>
    
