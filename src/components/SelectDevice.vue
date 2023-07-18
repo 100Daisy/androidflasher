@@ -1,14 +1,16 @@
 <script setup>
 import { defineEmits } from "vue";
 import * as fastboot from "android-fastboot";
+import { useDeviceStore } from "@/stores/devices";
+const deviceStore = useDeviceStore();
 
 // declare emits
 const emit = defineEmits(['deviceIsConnected']);
 async function selectDevice() {
   let fastbootDevice = new fastboot.FastbootDevice();
   await fastbootDevice.connect();
-  window.device = fastbootDevice;
-  emit('deviceIsConnected', fastbootDevice);
+  deviceStore.device = fastbootDevice;
+  emit('deviceIsConnected', true);
 };
 </script>
 

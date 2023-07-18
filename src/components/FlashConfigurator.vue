@@ -1,5 +1,6 @@
 <script setup>
 import Swal from 'sweetalert2'
+import { useDeviceStore } from '@/stores/devices'
 import { ref, watch, defineEmits } from 'vue'
 
 const emit = defineEmits(['flash'])
@@ -7,8 +8,9 @@ const emit = defineEmits(['flash'])
 const dropFiles = ref([])
 const data = ref([])
 const slotToggle = ref('a')
+const deviceStore = useDeviceStore()
 
-window.device.getVariable("current-slot").then((slot) => {
+deviceStore.device.getVariable("current-slot").then((slot) => {
   if (slot == "b") {
     slotToggle.value = "a"
   }

@@ -4,6 +4,9 @@ import ProgressBar from './ProgressBar.vue';
 import Swal from 'sweetalert2';
 import FlashLog from './FlashLog.vue';
 import disableVerifyVbmeta from 'vbmeta-disabler';
+import { useDeviceStore } from '@/stores/devices';
+
+const deviceStore = useDeviceStore();
 // define files and data props
 const props = defineProps({
     data: {
@@ -19,24 +22,24 @@ async function startFlashing() {
   let curr_progress = -1;
   for (let i = 0; i < props.data.quantity; i++) {
     curr_progress++;
-    await window.device.runCommand(`set_active:${props.data.data[i].slot}`);
+    await deviceStore.device.runCommand(`set_active:${props.data.data[i].slot}`);
     latestLine.value = `Flashing ${props.data.files[i].name}...`;
     if (props.data.options.disableVerity && props.data.data[i].partition == 'vbmeta') {
       const vbmeta = await disableVerifyVbmeta(props.data.files[i]);
-      await window.device.flashBlob(props.data.data[i].partition, vbmeta, (t) => {
+      await deviceStore.device.flashBlob(props.data.data[i].partition, vbmeta, (t) => {
         // take progress.value every iteration and add progress to it
         progress.value = curr_progress + t;
       })
       continue;
     }
-    await window.device.flashBlob(props.data.data[i].partition, props.data.files[i], (t) => {
+    await deviceStore.device.flashBlob(props.data.data[i].partition, props.data.files[i], (t) => {
       // take progress.value every iteration and add progress to it
       progress.value = curr_progress + t;
     })
   }
   if (props.data.options.cleanFlash) {
     latestLine.value = 'Erasing userdata...';
-    await window.device.runCommand(`erase:userdata`);
+    await deviceStore.device.runCommand(`erase:userdata`);
   }
 }
 
@@ -48,7 +51,7 @@ startFlashing().then(() => {
     confirmButtonText: 'Reboot'
   }).then((result) => {
     if (result.isConfirmed) {
-      window.device.reboot()
+      deviceStore.device.reboot()
     }
   })
 })

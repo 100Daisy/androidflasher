@@ -4,11 +4,12 @@ import UnlockDevice from './components/UnlockDevice.vue'
 import SelectDevice from './components/SelectDevice.vue'
 import FlashConfigurator from './components/FlashConfigurator.vue'
 import Flashing from './components/Flashing.vue'
+import { useDeviceStore } from '@/stores/devices'
 import { ref } from 'vue'
 
 const activeStep = ref(1)
 const flashDetails = ref()
-
+const deviceStore = useDeviceStore()
 function redirect(url) {
   window.open(url, '_self')
 }
@@ -18,29 +19,37 @@ function startFlashing(data) {
   flashDetails.value = data
 }
 
-async function checkUnlockState(device) {
-  const unlocked = await device.getVariable('unlocked')
-
-  if (unlocked === 'no') {
-    activeStep.value = 2
-    return
-  }
-
+async function askUnlockState() {
   const result = await Swal.fire({
-    title: 'Device unlocked?',
-    text: 'We are unable to detect the device unlock state, make sure you have unlocked your device and proceed.',
-    icon: 'question',
-    confirmButtonText: 'Unlocked',
-    denyButtonText: 'Help Me!',
-    showDenyButton: true,
-    reverseButtons: true
-  })
-  console.log(result)
+      title: 'Device unlocked?',
+      text: 'We are unable to detect the device unlock state, make sure you have unlocked your device and proceed.',
+      icon: 'question',
+      confirmButtonText: 'Unlocked',
+      denyButtonText: 'Help Me!',
+      showDenyButton: true,
+      reverseButtons: true
+    })
   if (result.isDenied) {
-    activeStep.value = 2
-    return
+    return false
   }
-  activeStep.value = 3
+  return true
+}
+async function checkUnlockState() {
+  const unlocked = await deviceStore.device.getVariable('unlocked') === 'yes' ? true : false;
+  if (unlocked) {
+    // Unlocked - Auto detected
+    deviceStore.isUnlocked = true
+    activeStep.value = 3
+    return
+  } else if (await askUnlockState()) {
+    // Unlocked - User confirmed
+    deviceStore.isUnlocked = true
+    activeStep.value = 3
+  } else {
+    // Locked
+    deviceStore.isUnlocked = false
+    activeStep.value = 2
+  }
 }
 </script>
 
