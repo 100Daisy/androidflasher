@@ -6,6 +6,7 @@ export const useDeviceStore = defineStore('devices', {
   state: () => {
     return {
         device: FastbootDevice,
+        manufacturer: String,
         isUnlocked: Boolean,
         flashObject: Object,
     }

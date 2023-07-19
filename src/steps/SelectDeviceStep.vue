@@ -11,6 +11,7 @@ async function selectDevice() {
   let fastbootDevice = new fastboot.FastbootDevice();
   await fastbootDevice.connect();
   deviceStore.device = fastbootDevice;
+  deviceStore.manufacturer = fastbootDevice.device.manufacturerName;
   emit('deviceIsConnected', true);
 };
 </script>
