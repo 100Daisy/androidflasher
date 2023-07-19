@@ -1,11 +1,12 @@
 <script setup>
 import Swal from 'sweetalert2'
-import { useDeviceStore } from '@/stores/devices'
 import { ref, defineEmits } from 'vue'
-const emit = defineEmits(['flash'])
+import { useDeviceStore } from '@/stores/devices'
 
+const emit = defineEmits(['flash'])
 const data = ref([])
 const slotToggle = ref('a')
+
 const deviceStore = useDeviceStore()
 
 deviceStore.device.getVariable("current-slot").then((slot) => {

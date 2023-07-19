@@ -1,10 +1,11 @@
 <script setup>
-import { ref } from 'vue';
-import ProgressBar from './ProgressBar.vue';
 import Swal from 'sweetalert2';
-import FlashLog from './FlashLog.vue';
 import disableVerifyVbmeta from 'vbmeta-disabler';
+import { ref } from 'vue';
 import { useDeviceStore } from '@/stores/devices';
+
+import ProgressBar from '@/components/ProgressBar.vue';
+import FlashLog from '@/components/FlashLog.vue';
 
 const deviceStore = useDeviceStore();
 const latestLine = ref('');

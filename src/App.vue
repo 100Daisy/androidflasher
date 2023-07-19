@@ -1,14 +1,16 @@
 <script setup>
 import Swal from 'sweetalert2'
-import UnlockDeviceStep from './components/UnlockDeviceStep.vue'
-import SelectDeviceStep from './components/SelectDeviceStep.vue'
-import FlashConfiguratorStep from './components/FlashConfiguratorStep.vue'
-import FlashingStep from './components/FlashingStep.vue'
-import { useDeviceStore } from '@/stores/devices'
 import { ref } from 'vue'
+import { useDeviceStore } from './stores/devices'
+
+import UnlockDeviceStep from './steps/UnlockDeviceStep.vue'
+import SelectDeviceStep from './steps/SelectDeviceStep.vue'
+import FlashConfiguratorStep from './steps/FlashConfiguratorStep.vue'
+import FlashingStep from './steps/FlashingStep.vue'
 
 const activeStep = ref(1)
 const deviceStore = useDeviceStore()
+
 function redirect(url) {
   window.open(url, '_self')
 }

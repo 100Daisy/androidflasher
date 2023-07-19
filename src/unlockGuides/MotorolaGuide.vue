@@ -2,9 +2,10 @@
 import Swal from 'sweetalert2';
 import { ref } from 'vue'
 
+const emit = defineEmits(['unlockCompleted'])
 const activeStep = ref(1)
 const unlockCode = ref('')
-const emit = defineEmits(['unlockCompleted'])
+
 async function getUnlockData() {
     let unlockData = await window.device.runCommand( 'oem get_unlock_data')
     // remove first 10 characters in string

@@ -1,19 +1,12 @@
 <script setup>
-import { defineProps} from 'vue';
 import Swal from 'sweetalert2';
-import UnlockMotorola from '../markdown/motorola.vue';
 import androidDevices from 'android-device-list';
+import { useDeviceStore } from '@/stores/devices';
 
-
-const props = defineProps({
-    manufacturer: {
-        type: String,
-        required: true,
-    },
-});
+import UnlockMotorola from '@/unlockGuides/MotorolaGuide.vue';
 
 const devices = [];
-
+const deviceStore = useDeviceStore();
 async function getUnlockTutorial() {
     const product = await window.device.getVariable('product');
     // choose last from the list of devices
@@ -35,11 +28,11 @@ async function getUnlockTutorial() {
         }
     }
 }
+
 </script>
 
 <template>
     <main>
-        <UnlockMotorola v-if="manufacturer == 'Motorola Mobility LLC.'" @unlockCompleted="this.$emit('unlockCompleted', true)" id="test"/>
         <!-- <o-button @click="getUnlockTutorial()">I need more help</o-button> -->
     </main>
 </template>
