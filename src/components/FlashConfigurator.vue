@@ -1,11 +1,9 @@
 <script setup>
 import Swal from 'sweetalert2'
 import { useDeviceStore } from '@/stores/devices'
-import { ref, watch, defineEmits } from 'vue'
-
+import { ref, defineEmits } from 'vue'
 const emit = defineEmits(['flash'])
 
-const dropFiles = ref([])
 const data = ref([])
 const slotToggle = ref('a')
 const deviceStore = useDeviceStore()
@@ -18,7 +16,6 @@ deviceStore.device.getVariable("current-slot").then((slot) => {
     slotToggle.value = "b"
   }
 })
-
 const wipeToggle = ref(false)
 const verityToggle = ref(false)
 const hasVbmeta = ref(false)
@@ -56,12 +53,13 @@ const columns = ref([
   }
 ])
 
-const deleteDropFile = (index) => {
-  if (dropFiles.value[index].name.split('.')[0] == "vbmeta") {
+const deleteDropFile = (filename) => {
+  const index = data.value.findIndex((file) => file.filename == filename)
+
+  if (data.value[index].partition == "vbmeta") {
     hasVbmeta.value = false;
     verityToggle.value = false;
   }
-  dropFiles.value.splice(index, 1)
   data.value.splice(index, 1)
 }
 
@@ -69,23 +67,23 @@ const setFlashSlot = (index) => {
   data.value[index].slot = data.value[index].slot == 'a' ? 'b' : 'a'
 }
 
-watch(dropFiles, (newDropFiles) => {
-  for (let i = data.value.length; i < newDropFiles.length; i++) {
-    let file = {
-      id: i,
-      filename: newDropFiles[i].name,
-      partition: newDropFiles[i].name.split('.')[0],
-      size: (newDropFiles[i].size / 1024 / 1024).toFixed(2) + ' MB',
-      slot: slotToggle.value
+const addFile = (newFiles) => {
+  // iterate over dropComponent
+  for (let i=0; i < newFiles.length; i++) {
+    const file = {
+        filename: newFiles[i].name,
+        partition: newFiles[i].name.split('.')[0],
+        size: (newFiles[i].size / 1024 / 1024).toFixed(2) + ' MB',
+        slot: slotToggle.value,
+        blob: newFiles[i]
     }
+    if (file.partition == "vbmeta") hasVbmeta.value = true;
     data.value.push(file)
-
-    if (newDropFiles[i].name.split('.')[0] == "vbmeta") hasVbmeta.value = true;
   }
-}, { deep: true })
-
+  console.log(data.value)
+}
 const startFlash = () => {
-    if (!dropFiles.value.length) {
+    if (!data.value.length) {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -93,10 +91,18 @@ const startFlash = () => {
         })
         return
     }
+    deviceStore.flashObject = {
+      files: data.value,
+      quantity: data.value.length,
+      options: {
+        cleanFlash: wipeToggle.value,
+        disableVerity: verityToggle.value,
+        ab: slotToggle.value
+      }
+    }
     const ret = {
-      files: dropFiles.value,
       data: data.value,
-      quantity: dropFiles.value.length,
+      quantity: data.value.length,
       options: {
         cleanFlash: wipeToggle.value,
         disableVerity: verityToggle.value,
@@ -110,18 +116,19 @@ const startFlash = () => {
 <template>
     <main>
         <o-field id="test" :addons="false">
-            <o-table v-if="dropFiles.length > 0" :paginated="dropFiles.length > 0" :per-page="7" :striped="true" :data="data">
+            <o-table v-if="data.length > 0" :paginated="data.length > 0" :per-page="7" :striped="true" :data="data">
                 <o-table-column
-                    v-for="column in columns"
+                    v-for="(column, index) in columns"
+                    :key="index"
                     v-bind="column"
                     #default="{ row }">
                     <span v-if="column.field !== 'slot' && column.field !== 'partition'">{{ row[column.field] }}</span>
                     <o-button v-if="column.field == 'slot'" @click="setFlashSlot(row.id)" color="is-danger">{{ row.slot }}</o-button>
                     <o-input v-model="row.partition"  v-if="column.field == 'partition'"></o-input>
-                    <o-button v-if="column.field == 'deleteButton'" @click="deleteDropFile(row.id)" color="is-danger">Delete</o-button>
+                    <o-button v-if="column.field == 'deleteButton'" @click="deleteDropFile(row.filename)" color="is-danger">Delete</o-button>
                 </o-table-column>
             </o-table>
-            <o-upload v-model="dropFiles" multiple drag-drop>
+            <o-upload :native=true @update:modelValue="addFile($event)" multiple drag-drop>
                 <section class="ex-center">
                 <p>
                     <o-icon icon="file-upload" size="large">

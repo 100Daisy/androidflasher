@@ -8,15 +8,9 @@ import { useDeviceStore } from '@/stores/devices'
 import { ref } from 'vue'
 
 const activeStep = ref(1)
-const flashDetails = ref()
 const deviceStore = useDeviceStore()
 function redirect(url) {
   window.open(url, '_self')
-}
-
-function startFlashing(data) {
-  activeStep.value = 4
-  flashDetails.value = data
 }
 
 async function askUnlockState() {
@@ -64,10 +58,10 @@ async function checkUnlockState() {
           <UnlockDevice @unlockCompleted="activeStep = 3" :manufacturer="manufacturer"/>
         </o-step-item>
         <o-step-item step="3" label="Files">
-          <FlashConfigurator v-if="activeStep == 3" @flash="data => startFlashing(data)"/>
+          <FlashConfigurator v-if="activeStep == 3" @flash="activeStep = 4"/>
         </o-step-item>
         <o-step-item step="4" label="Install">
-          <Flashing v-if="activeStep == 4" :data="flashDetails" />
+          <Flashing v-if="activeStep == 4" />
         </o-step-item>
       </main>
     </o-steps>
@@ -130,10 +124,6 @@ main {
 } */
 .o-pag {
   padding: 20px 0px;
-}
-
-.o-table__root {
-  /* height: 540px; */
 }
 
 .o-upl__draggable {
