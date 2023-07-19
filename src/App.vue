@@ -1,9 +1,9 @@
 <script setup>
 import Swal from 'sweetalert2'
-import UnlockDevice from './components/UnlockDevice.vue'
-import SelectDevice from './components/SelectDevice.vue'
-import FlashConfigurator from './components/FlashConfigurator.vue'
-import Flashing from './components/Flashing.vue'
+import UnlockDeviceStep from './components/UnlockDeviceStep.vue'
+import SelectDeviceStep from './components/SelectDeviceStep.vue'
+import FlashConfiguratorStep from './components/FlashConfiguratorStep.vue'
+import FlashingStep from './components/FlashingStep.vue'
 import { useDeviceStore } from '@/stores/devices'
 import { ref } from 'vue'
 
@@ -52,16 +52,16 @@ async function checkUnlockState() {
     <o-steps :has-navigation=false v-model="activeStep">
       <main>
         <o-step-item step="1" label="Device">
-          <SelectDevice @deviceIsConnected="checkUnlockState"/>
+          <SelectDeviceStep @deviceIsConnected="checkUnlockState"/>
         </o-step-item>
         <o-step-item step="2" label="Unlock">
-          <UnlockDevice @unlockCompleted="activeStep = 3" :manufacturer="manufacturer"/>
+          <UnlockDeviceStep @unlockCompleted="activeStep = 3" :manufacturer="manufacturer"/>
         </o-step-item>
         <o-step-item step="3" label="Files">
-          <FlashConfigurator v-if="activeStep == 3" @flash="activeStep = 4"/>
+          <FlashConfiguratorStep v-if="activeStep == 3" @flash="activeStep = 4"/>
         </o-step-item>
         <o-step-item step="4" label="Install">
-          <Flashing v-if="activeStep == 4" />
+          <FlashingStep v-if="activeStep == 4" />
         </o-step-item>
       </main>
     </o-steps>
