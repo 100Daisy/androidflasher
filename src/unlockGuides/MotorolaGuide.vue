@@ -1,13 +1,16 @@
 <script setup>
 import Swal from 'sweetalert2';
 import { ref } from 'vue'
+import { useDeviceStore } from '../stores/devices';
 
 const emit = defineEmits(['unlockCompleted'])
 const activeStep = ref(1)
 const unlockCode = ref('')
 
+const deviceStore = useDeviceStore()
+
 async function getUnlockData() {
-    let unlockData = await window.device.runCommand( 'oem get_unlock_data')
+    let unlockData = await deviceStore.device.runCommand('oem get_unlock_data')
     // remove first 10 characters in string
     unlockData.text = unlockData.text.substring(12)
     // strip /n from the string
@@ -22,13 +25,14 @@ function goToSite() {
 }
 
 async function unlockWithCode() {
-    window.device.runCommand(`oem unlock ${unlockCode.value}`)
+    deviceStore.device.runCommand(`oem unlock ${unlockCode.value}`)
     await Swal.fire({
         title: 'User interaction required',
         text: 'Look at your device and confirm the unlock process, your device will be wiped, reboot back to fastboot after wipe is done.',
         icon: 'warning',
         confirmButtonText: 'Done'
     })
+    deviceStore.isUnlocked = true
     emit('unlockCompleted', true)
 
 }

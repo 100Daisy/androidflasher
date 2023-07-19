@@ -33,6 +33,7 @@ async function getUnlockTutorial() {
 
 <template>
     <main>
+        <UnlockMotorola v-if="deviceStore.manufacturer == 'Motorola Mobility LLC.'" @unlockCompleted="this.$emit('unlockCompleted', true)" id="test"/>
         <!-- <o-button @click="getUnlockTutorial()">I need more help</o-button> -->
     </main>
 </template>
