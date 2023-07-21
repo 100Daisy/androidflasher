@@ -1,5 +1,6 @@
 import App from './App.vue'
 import Oruga from '@oruga-ui/oruga-next'
+import router from './router'
 
 import '@oruga-ui/oruga-next/dist/oruga-full-vars.css'
 
@@ -20,5 +21,6 @@ createApp(App)
     iconPack: 'fas',
     iconComponent: 'vue-fontawesome'
   })
+  .use(router)
   .use(pinia)
   .mount("#app");
