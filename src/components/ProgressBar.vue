@@ -1,7 +1,16 @@
 <script setup>
 import { ref, computed } from 'vue';
-
-const props = defineProps(['progress', 'parts']);
+//  set default for parts
+const props = defineProps({
+  progress: {
+    type: Number,
+    default: 0
+  },
+  parts: {
+    type: Number,
+    default: 1
+  }
+});
 
 const fillWidth = computed(() => {
   if (props.progress >= props.parts) {
