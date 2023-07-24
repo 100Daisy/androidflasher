@@ -22,13 +22,6 @@ const verityToggle = ref(false)
 const hasVbmeta = ref(false)
 const columns = ref([
   {
-    field: 'id',
-    label: 'ID',
-    width: '40',
-    numeric: true,
-    position: 'centered'
-  },
-  {
     field: 'filename',
     label: 'Filename'
   },
@@ -124,7 +117,7 @@ const startFlash = () => {
                     v-bind="column"
                     #default="{ row }">
                     <span v-if="column.field !== 'slot' && column.field !== 'partition'">{{ row[column.field] }}</span>
-                    <o-button v-if="column.field == 'slot'" @click="setFlashSlot(row.id)" color="is-danger">{{ row.slot }}</o-button>
+                    <o-button v-if="column.field == 'slot'" @click="setFlashSlot(data.findIndex((file) => file.filename == row.filename))" color="is-danger">{{ row.slot }}</o-button>
                     <o-input v-model="row.partition"  v-if="column.field == 'partition'"></o-input>
                     <o-button v-if="column.field == 'deleteButton'" @click="deleteDropFile(row.filename)" color="is-danger">Delete</o-button>
                 </o-table-column>
