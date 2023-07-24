@@ -1,11 +1,12 @@
 <script setup>
 import { ref } from 'vue';
-import Swal from 'sweetalert2';
-import disableVerifyVbmeta from 'vbmeta-disabler';
 import * as fastboot from "android-fastboot";
-import ProgressBar from '../components/ProgressBar.vue';
+import PatchConfiguratorStep from '../steps/PatchConfiguratorStep.vue';
+import { useDeviceStore } from '../stores/devices';
+import FlashingStep from '../steps/FlashingStep.vue';
 
-const progress = ref(0);
+const activeStep = ref(1);
+const deviceStore = useDeviceStore();
 
 async function selectDevice() {
   let fastbootDevice = new fastboot.FastbootDevice();
@@ -13,39 +14,40 @@ async function selectDevice() {
   return fastbootDevice;
 };
 
-async function patchVbmeta(vbmeta) {
-    const patchedVbmeta = await disableVerifyVbmeta(vbmeta)
-    Swal.fire({
-        title: 'Patched vbmeta',
-        text: 'Patched vbmeta is ready to be flashed',
-        icon: 'success',
-        showDenyButton: true,
-        reverseButtons: true,
-        confirmButtonText: 'Flash',
-        denyButtonText: 'Download',
-    }).then( async (result) => {
-        if (result.isConfirmed) {
-            selectDevice().then((fastbootDevice) => {
-              console.log(fastbootDevice)
-              console.log(patchedVbmeta)
-              fastbootDevice.flashBlob('vbmeta', patchedVbmeta , (t) => {
-                progress.value = t;
-              });
-            });
-        } else {
-            const blob = new Blob([patchedVbmeta], { type: 'application/octet-stream' })
-            const url = URL.createObjectURL(blob)
-            const link = document.createElement('a')
-            link.href = url
-            link.download = 'vbmeta.img'
-            link.click()
-        }
-    })
+function startFlash() {
+  selectDevice().then((fastbootDevice) => {
+    deviceStore.device = fastbootDevice;
+    activeStep.value = 3;
+  });
+}
+function startDownload() {
+  console.log(deviceStore.flashObject)
+  for (let i = 0; i < deviceStore.flashObject.files.length; i++) {
+    const blob = new Blob([deviceStore.flashObject.files[i]], { type: 'application/octet-stream' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = deviceStore.flashObject.files[i].filename
+    link.click()
+  }
 }
 </script>
 <template>
-  <main>
-    <o-upload @update:modelValue="patchVbmeta($event)" v-model="file">
+    <o-steps :has-navigation=false v-model="activeStep" >
+      <o-step-item step="1" label="Patch">
+        <PatchConfiguratorStep @patch="activeStep = 2"/>
+      </o-step-item>
+      <o-step-item step="2" label="ChooseAction">
+        <o-button @click="startDownload()">Download</o-button>
+        <o-button @click="startFlash()">Flash</o-button>
+        <o-button disabled>Share</o-button>
+      </o-step-item>
+      <o-step-item step="3" v-if="activeStep == 3" label="Flash">
+        <FlashingStep v-if="activeStep == 3" />
+      </o-step-item>
+      <o-step-item step="4" v-if="activeStep == 4" label="Share"></o-step-item>
+    </o-steps>
+    <!-- <o-upload @update:modelValue="patchVbmeta($event)" v-model="file">
       <o-button tag="a" variant="primary">
         <o-icon icon="upload"></o-icon>
         <span class="file-name" v-if="file">
@@ -54,8 +56,7 @@ async function patchVbmeta(vbmeta) {
         <span v-else >Vbmeta Disable Verify</span>
       </o-button>
     </o-upload>
-    <ProgressBar :progress="progress"/>
-  </main>
+    <ProgressBar :progress="progress"/> -->
 </template>
 
 <style>
