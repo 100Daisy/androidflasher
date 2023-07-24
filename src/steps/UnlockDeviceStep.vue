@@ -40,7 +40,6 @@ async function getUnlockTutorial() {
 </template>
    
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Narnoor&family=Tilt+Neon&display=swap');
 main {
   align-items: center;
   flex-direction: column;
