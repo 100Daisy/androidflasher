@@ -7,6 +7,7 @@ import UnlockMotorola from '@/unlockGuides/MotorolaGuide.vue';
 
 const devices = [];
 const deviceStore = useDeviceStore();
+
 async function getUnlockTutorial() {
     const product = await window.device.getVariable('product');
     // choose last from the list of devices

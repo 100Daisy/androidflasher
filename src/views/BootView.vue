@@ -8,6 +8,7 @@ import { useDeviceStore } from '../stores/devices';
 
 const deviceStore = useDeviceStore()
 const activeStep = ref()
+
 async function askUnlockState() {
   const result = await Swal.fire({
       title: 'Device unlocked?',
@@ -41,6 +42,7 @@ async function checkUnlockState() {
   }
 }
 </script>
+
 <template>
   <o-steps :has-navigation=false v-model="activeStep">
     <main>

@@ -117,13 +117,8 @@ main {
   border-radius: 25px 0px 0px 25px;
 }
 .o-upl {
-  /* margin: 20px; */
   height: 100%;
 }
-/* .o-icon {
-  margin: 1em;
-  flex: 1;
-} */
 .o-pag {
   padding: 20px 0px;
 }

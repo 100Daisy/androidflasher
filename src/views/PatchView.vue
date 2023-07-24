@@ -20,6 +20,7 @@ function startFlash() {
     activeStep.value = 3;
   });
 }
+
 function startDownload() {
   console.log(deviceStore.flashObject)
   for (let i = 0; i < deviceStore.flashObject.files.length; i++) {
@@ -32,6 +33,7 @@ function startDownload() {
   }
 }
 </script>
+
 <template>
     <o-steps :has-navigation=false v-model="activeStep" >
       <o-step-item step="1" label="Patch">
@@ -47,16 +49,6 @@ function startDownload() {
       </o-step-item>
       <o-step-item step="4" v-if="activeStep == 4" label="Share"></o-step-item>
     </o-steps>
-    <!-- <o-upload @update:modelValue="patchVbmeta($event)" v-model="file">
-      <o-button tag="a" variant="primary">
-        <o-icon icon="upload"></o-icon>
-        <span class="file-name" v-if="file">
-            {{ file.name }}
-        </span>
-        <span v-else >Vbmeta Disable Verify</span>
-      </o-button>
-    </o-upload>
-    <ProgressBar :progress="progress"/> -->
 </template>
 
 <style>

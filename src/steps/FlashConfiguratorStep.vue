@@ -4,8 +4,12 @@ import { ref, defineEmits } from 'vue'
 import { useDeviceStore } from '@/stores/devices'
 
 const emit = defineEmits(['flash'])
+
 const data = ref([])
 const slotToggle = ref('a')
+const wipeToggle = ref(false)
+const verityToggle = ref(false)
+const hasVbmeta = ref(false)
 
 const deviceStore = useDeviceStore()
 
@@ -17,9 +21,7 @@ deviceStore.device.getVariable("current-slot").then((slot) => {
     slotToggle.value = "b"
   }
 })
-const wipeToggle = ref(false)
-const verityToggle = ref(false)
-const hasVbmeta = ref(false)
+
 const columns = ref([
   {
     field: 'filename',
@@ -62,7 +64,6 @@ const setFlashSlot = (index) => {
 }
 
 const addFile = (newFiles) => {
-  // iterate over dropComponent
   for (let i=0; i < newFiles.length; i++) {
     const file = {
         filename: newFiles[i].name,
@@ -76,6 +77,7 @@ const addFile = (newFiles) => {
   }
   console.log(data.value)
 }
+
 const startFlash = () => {
     if (!data.value.length) {
         Swal.fire({

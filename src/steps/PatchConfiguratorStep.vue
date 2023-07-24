@@ -49,7 +49,6 @@ const deleteDropFile = (filename) => {
 }
 
 const addFile = async (newFiles) => {
-  // iterate over dropComponent
   for (let i=0; i < newFiles.length; i++) {
     const file = {
         filename: newFiles[i].name,
@@ -63,6 +62,7 @@ const addFile = async (newFiles) => {
   }
   console.log(data.value)
 }
+
 const startPatch = () => {
     if (!data.value.length) {
         Swal.fire({
@@ -146,6 +146,5 @@ main {
   flex: 0 0 auto;
   margin: 0px;
 }
-
 </style>
 

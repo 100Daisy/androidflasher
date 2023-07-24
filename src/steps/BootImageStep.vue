@@ -2,14 +2,18 @@
 import ProgressBar from '../components/ProgressBar.vue';
 import { useDeviceStore } from '../stores/devices';
 import { ref } from 'vue'
+
 const device = useDeviceStore().device
+
 const progress = ref()
+
 function bootFromImage(file) {
     device.bootBlob(file, (e) => {
         this.progress = e
     })
 }
 </script>
+
 <template>
   <o-field class="file">
     <o-upload @update:modelValue="bootFromImage($event)" v-model="file">
