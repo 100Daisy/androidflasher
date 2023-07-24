@@ -87,7 +87,6 @@ const startFlash = () => {
     }
     deviceStore.flashObject = {
       files: data.value,
-      quantity: data.value.length,
       options: {
         cleanFlash: wipeToggle.value,
         disableVerity: verityToggle.value,
