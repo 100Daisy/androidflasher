@@ -94,16 +94,7 @@ const startFlash = () => {
         ab: slotToggle.value
       }
     }
-    const ret = {
-      data: data.value,
-      quantity: data.value.length,
-      options: {
-        cleanFlash: wipeToggle.value,
-        disableVerity: verityToggle.value,
-        ab: slotToggle.value
-      }
-    }
-    emit('flash', ret)
+    emit('flash', true)
 }
 </script>
 
