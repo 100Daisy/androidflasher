@@ -29,12 +29,11 @@ const fillWidth = computed(() => {
 
 <style>
 .progress-bar {
-    width: 80%;
+    width: 100%;
     height: 20px;
     background-color: #eee;
     border-radius: 25px;
     overflow: hidden;
-    margin-bottom: 50px;
 }
 
 .progress-bar__fill {
