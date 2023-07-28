@@ -60,7 +60,7 @@ startFlashing().then(() => {
     <main>
       <o-icon icon="bolt" size="large" />
       <FlashLog :latest-line="latestLine" :opacity-decrease="0.3" :maxLines="6"/>
-      <ProgressBar :progress="progress" :parts="data.length"/>
+      <ProgressBar :progress="progress" :parts="data.length" style="width: 80%;"/>
     </main>
 </template>
 
