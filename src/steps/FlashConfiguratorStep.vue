@@ -13,6 +13,11 @@ const hasVbmeta = ref(false)
 
 const deviceStore = useDeviceStore()
 
+data.value = deviceStore.flashObject.files ?? []
+slotToggle.value = deviceStore.flashObject.options?.ab
+wipeToggle.value = deviceStore.flashObject.options?.cleanFlash
+verityToggle.value = deviceStore.flashObject.options?.disableVerity
+
 deviceStore.device.getVariable("current-slot").then((slot) => {
   if (slot == "b") {
     slotToggle.value = "a"
