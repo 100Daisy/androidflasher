@@ -1,17 +1,72 @@
 <script setup>
+import Swal from 'sweetalert2'
+
 import { defineEmits } from "vue";
 import { useDeviceStore } from "@/stores/devices";
+import { useRoute } from 'vue-router'
+
 import * as fastboot from "android-fastboot";
 
 const emit = defineEmits(['deviceIsConnected']);
 
 const deviceStore = useDeviceStore();
+const repo = useRoute().query.repo
+
+async function importFlashConfig(response, device) {
+  try {
+    response = await response.json()
+  } catch {
+    await Swal.fire({
+      title: 'Error',
+      text: "Repository will not be imported",
+      icon: 'error',
+      confirmButtonText: 'Ok'
+    })
+    return
+  }
+  console.log(response.devices)
+  Object.keys(response.devices).forEach(element => {
+    if (element == device) {
+      console.log(response.devices[element])
+      deviceStore.flashObject = response.devices[element]
+    }
+  });
+  // iterate over object
+  
+}
 
 async function selectDevice() {
+  let response 
+  if (repo) {
+    const popup = await Swal.fire({
+      title: 'Import repository?',
+      text: 'Do you want to use the repository ' + repo + ' for this session?',
+      icon: 'warning',
+      confirmButtonText: 'Yes',
+      denyButtonText: 'No',
+      showDenyButton: true,
+      reverseButtons: true
+    })
+    if (popup.isConfirmed) {
+      try {
+        response = await fetch(repo)
+      } catch (error) {
+        await Swal.fire({
+          title: 'Error',
+          text: "Repository will not be imported",
+          icon: 'error',
+          confirmButtonText: 'Ok'
+        })
+      }
+    }
+  }
   let fastbootDevice = new fastboot.FastbootDevice();
   await fastbootDevice.connect();
   deviceStore.device = fastbootDevice;
   deviceStore.manufacturer = fastbootDevice.device.manufacturerName;
+  if (response) {
+    await importFlashConfig(response, await fastbootDevice.getVariable('product'))
+  }
   emit('deviceIsConnected', true);
 };
 </script>
