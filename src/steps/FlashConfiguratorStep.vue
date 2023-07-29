@@ -1,5 +1,4 @@
 <script setup>
-import Swal from 'sweetalert2'
 import { ref, defineEmits } from 'vue'
 import { useDeviceStore } from '@/stores/devices'
 
@@ -79,14 +78,6 @@ const addFile = (newFiles) => {
 }
 
 const startFlash = () => {
-    if (!data.value.length) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'You need to select at least one file!',
-        })
-        return
-    }
     deviceStore.flashObject = {
       files: data.value,
       options: {
@@ -136,7 +127,7 @@ const startFlash = () => {
           </o-tooltip>
         </o-field>
         <o-field id="flash">
-            <o-button size="large" @click="startFlash()">Flash</o-button>
+            <o-button size="large" @click="startFlash()" :disabled="!(data.length > 0)">Flash</o-button>
         </o-field>
     </main>
 </template>
