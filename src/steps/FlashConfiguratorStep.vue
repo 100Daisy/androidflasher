@@ -1,6 +1,7 @@
 <script setup>
 import { ref, defineEmits } from 'vue'
 import { useDeviceStore } from '@/stores/devices'
+import { downloadFileWithProgress } from '@/utils/download'
 
 const emit = defineEmits(['flash'])
 
@@ -47,6 +48,17 @@ const columns = ref([
     position: 'centered'
   }
 ])
+
+for (let i = 0; i < data.value.length; i++) {
+  if (typeof data.value[i].blob === 'string') {
+    downloadFileWithProgress(data.value[i].blob, (progress) => {
+      data.value[i].progress = progress
+    }).then((blob) => {
+      data.value[i].blob = blob;
+      data.value[i].size = (data.value[i].blob.size / 1024 / 1024).toFixed(2) + ' MB'
+    })
+  }
+}
 
 const deleteDropFile = (filename) => {
   const index = data.value.findIndex((file) => file.filename == filename)
