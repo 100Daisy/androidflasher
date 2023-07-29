@@ -2,6 +2,7 @@
 import { ref, defineEmits } from 'vue'
 import { useDeviceStore } from '@/stores/devices'
 import { downloadFileWithProgress } from '@/utils/download'
+import ProgressBar from '../components/ProgressBar.vue';
 
 const emit = defineEmits(['flash'])
 
@@ -110,7 +111,7 @@ const startFlash = () => {
 <template>
     <main>
         <o-field id="test" :addons="false">
-            <o-table v-if="data.length > 0" :paginated="data.length > 0" :per-page="7" :striped="true" :data="data">
+              <o-table v-if="data.length > 0" :paginated="data.length > 0" :per-page="7" :striped="true" :data="data">
                 <o-table-column
                     v-for="(column, index) in columns"
                     :key="index"
@@ -120,8 +121,9 @@ const startFlash = () => {
                     <o-button v-if="column.field == 'slot'" @click="setFlashSlot(data.findIndex((file) => file.filename == row.filename))" color="is-danger">{{ row.slot }}</o-button>
                     <o-input v-model="row.partition"  v-if="column.field == 'partition'"></o-input>
                     <o-button v-if="column.field == 'deleteButton'" @click="deleteDropFile(row.filename)" color="is-danger">Delete</o-button>
+                    <ProgressBar v-if="column.field == 'size' && !row[column.field]" :progress="row.progress"/>
                 </o-table-column>
-            </o-table>
+              </o-table>
             <o-upload :native=true @update:modelValue="addFile($event)" multiple drag-drop>
                 <section class="ex-center">
                 <p>
