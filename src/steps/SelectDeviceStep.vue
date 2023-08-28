@@ -64,6 +64,16 @@ async function selectDevice() {
   await fastbootDevice.connect();
   deviceStore.device = fastbootDevice;
   deviceStore.manufacturer = fastbootDevice.device.manufacturerName;
+
+  deviceStore.device.getVariable("current-slot").then((slot) => {
+    console.log(slot)
+    if (!slot) {
+      deviceStore.isABDevice = false
+    } else {
+      deviceStore.isABDevice = true
+    }
+  })
+  
   if (response) {
     await importFlashConfig(response, await fastbootDevice.getVariable('product'))
   }
