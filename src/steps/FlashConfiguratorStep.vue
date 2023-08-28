@@ -19,14 +19,16 @@ slotToggle.value = deviceStore.flashObject.options?.ab
 wipeToggle.value = deviceStore.flashObject.options?.cleanFlash
 verityToggle.value = deviceStore.flashObject.options?.disableVerity
 
-deviceStore.device.getVariable("current-slot").then((slot) => {
-  if (slot == "b") {
-    slotToggle.value = "a"
-  }
-  else {
-    slotToggle.value = "b"
-  }
-})
+if (deviceStore.isABDevice) {
+  deviceStore.device.getVariable("current-slot").then((slot) => {
+    if (slot == "b") {
+      slotToggle.value = "a"
+    }
+    else {
+      slotToggle.value = "b"
+    }
+  })
+}
 
 const columns = ref([
   {
@@ -86,7 +88,7 @@ const addFile = (newFiles) => {
         filename: newFiles[i].name,
         partition: newFiles[i].name.split('.')[0],
         size: (newFiles[i].size / 1024 / 1024).toFixed(2) + ' MB',
-        slot: slotToggle.value,
+        slot: deviceStore.isABDevice ? slotToggle.value : null,
         blob: newFiles[i]
     }
     if (file.partition == "vbmeta") hasVbmeta.value = true;
@@ -118,7 +120,7 @@ const startFlash = () => {
                     v-bind="column"
                     #default="{ row }">
                     <span v-if="column.field !== 'slot' && column.field !== 'partition'">{{ row[column.field] }}</span>
-                    <o-button v-if="column.field == 'slot'" @click="setFlashSlot(data.findIndex((file) => file.filename == row.filename))" color="is-danger">{{ row.slot }}</o-button>
+                    <o-button v-if="column.field == 'slot' && deviceStore.isABDevice" @click="setFlashSlot(data.findIndex((file) => file.filename == row.filename))" color="is-danger">{{ row.slot }}</o-button>
                     <o-input v-model="row.partition"  v-if="column.field == 'partition'"></o-input>
                     <o-button v-if="column.field == 'deleteButton'" @click="deleteDropFile(row.filename)" color="is-danger">Delete</o-button>
                     <ProgressBar v-if="column.field == 'size' && !row[column.field]" :progress="row.progress"/>
@@ -141,7 +143,7 @@ const startFlash = () => {
           <o-tooltip label="Allow booting unsigned images">
             <o-switch :disabled="!hasVbmeta" v-model="verityToggle">Disable Verity</o-switch>
           </o-tooltip>
-          <o-tooltip label="Choose between A or B slot">
+          <o-tooltip label="Choose between A or B slot" v-if="deviceStore.isABDevice">
             <o-switch v-model="slotToggle" true-value="b" false-value="a">A/B</o-switch>
           </o-tooltip>
         </o-field>
