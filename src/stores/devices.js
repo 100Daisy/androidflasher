@@ -9,6 +9,7 @@ export const useDeviceStore = defineStore('devices', {
         manufacturer: String,
         isUnlocked: Boolean,
         flashObject: Object,
+        isABDevice: Boolean,
     }
   }
 })
