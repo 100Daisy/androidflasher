@@ -3,6 +3,7 @@ import { ref, defineEmits } from 'vue'
 import { useDeviceStore } from '@/stores/devices'
 import { downloadFileWithProgress } from '@/utils/download'
 import ProgressBar from '../components/ProgressBar.vue';
+import Swal from 'sweetalert2';
 
 const emit = defineEmits(['flash'])
 
@@ -64,6 +65,15 @@ for (let i = 0; i < data.value.length; i++) {
     }).then((blob) => {
       data.value[i].blob = blob;
       data.value[i].size = (data.value[i].blob.size / 1024 / 1024).toFixed(2) + ' MB'
+    }).catch((err) => {
+      Swal.fire({
+        title: 'Error',
+        text: `Unable to download ${data.value[i].filename}`,
+        icon: 'error',
+        confirmButtonText: 'Skip this file'
+      }).then(() => {
+        deleteDropFile(data.value[i].filename)
+      })
     })
   }
 }
