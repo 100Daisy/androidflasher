@@ -18,8 +18,10 @@ async function startFlashing() {
   let curr_progress = -1;
   for (let i = 0; i < data.length; i++) {
     curr_progress++;
-    console.log(device)
-    await device.runCommand(`set_active:${data[i].slot}`);
+    if (data[i].slot != null) { 
+      console.log("Switching slot")
+      await device.runCommand(`set_active:${data[i].slot}`);
+    }
     latestLine.value = `Flashing ${data[i].filename}...`;
     if (data.options?.disableVerity && data[i].partition == 'vbmeta') {
       const vbmeta = await disableVerifyVbmeta(data[i].blob);
