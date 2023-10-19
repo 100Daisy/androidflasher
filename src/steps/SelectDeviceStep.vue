@@ -109,7 +109,6 @@ p {
   margin: 0px;
   padding: 30px;
   color: #2c3e50;
-  font-family: 'Narnoor', serif;
   font-weight: bold;
   font-size: 26px;
   border-radius: 25px;

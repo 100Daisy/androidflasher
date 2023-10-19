@@ -69,13 +69,13 @@ async function checkUnlockState() {
     </o-steps>
     <section id="fot">
       <footer>
-        <span>
-          Made with <o-icon icon="heart"/> by <a href="https://github.com/100Daisy" target="_blank">100Daisy</a>
-        </span>
         <span id="icons">
           <o-icon clickable @click="redirect('https://paypal.me/100Daisy')" size="medium" pack="fab" icon="paypal"/>
-          <o-icon clickable @click="redirect('https://www.patreon.com/100Daisy')" size="medium" pack="fab" icon="patreon"/>
+          <o-icon clickable @click="redirect('/patch')" size="medium" pack="fas" icon="screwdriver-wrench"/>
           <o-icon clickable @click="redirect('https://github.com/100Daisy/androidflasher')" size="medium" pack="fab" icon="github"/>
+        </span>
+        <span id="creds">
+          Made with <o-icon icon="heart"/> by <a href="https://github.com/100Daisy" target="_blank">100Daisy</a>
         </span>
       </footer>
     </section>
@@ -83,8 +83,15 @@ async function checkUnlockState() {
 </template>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+#creds {
+  display: flex;
+  width: 200px;
+  justify-content: space-evenly;
+  margin-top: 50px;
+
+}
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   text-align: center;
   margin-top: 60px;
 }
@@ -123,11 +130,6 @@ main {
   padding: 20px 0px;
 }
 
-.o-upl__draggable {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 #fot {
   display: flex;
   justify-content: center;
@@ -135,7 +137,6 @@ main {
 }
 
 #icons {
-  margin-top: 50px;
   display: flex;
   justify-content: center;
   width: 100%;
