@@ -6,28 +6,50 @@ import { useDeviceStore } from "@/stores/devices";
 import { useRoute } from 'vue-router'
 
 import * as fastboot from "android-fastboot";
+import {
+    ZipReader,
+    BlobReader,
 
+} from "@zip.js/zip.js";
+
+import { createRepoFromEntries } from "@/utils/createRepoJson"
 const emit = defineEmits(['deviceIsConnected']);
 
 const deviceStore = useDeviceStore();
 const repo = useRoute().query.repo
 
 async function importFlashConfig(response, device) {
-  try {
-    response = await response.json()
-  } catch {
-    await Swal.fire({
-      title: 'Error',
-      text: "Repository will not be imported",
-      icon: 'error',
-      confirmButtonText: 'Ok'
-    })
-    return
-  }
+  console.log(response)
+  // get resposne as blob
+  response = await response.blob()
+  
+  // unzip response using zip.js
+  const reader = new ZipReader(new BlobReader(response));
+  const entries = await reader.getEntries();
+  // iterate over entries
+  const entries2 = []
+  entries.forEach(entry => {
+    if (entry.filename.endsWith('.img')) {
+      entry.filename = entry.filename.split('/')[1]
+      entries2.push(entry)
+    }
+  });
+  response = createRepoFromEntries(entries2, 'cebu')
+
+  // try {
+  //   response = await response.json()
+  // } catch {
+  //   await Swal.fire({
+  //     title: 'Error',
+  //     text: "Repository will not be imported",
+  //     icon: 'error',
+  //     confirmButtonText: 'Ok'
+  //   })
+  //   return
+  // }
   console.log(response.devices)
   Object.keys(response.devices).forEach(element => {
     if (element == device) {
-      console.log(response.devices[element])
       deviceStore.flashObject = response.devices[element]
     }
   });
@@ -38,9 +60,10 @@ async function importFlashConfig(response, device) {
 async function selectDevice() {
   let response 
   if (repo) {
+    let fileIsZip = repo.endsWith('.zip')
     const popup = await Swal.fire({
       title: 'Import repository?',
-      text: 'Do you want to use the repository ' + repo + ' for this session?',
+      text: fileIsZip ? 'Do you want to use the repository ' + repo + ' for this session?' : 'Do you want to use the repository ' + repo + ' for this session?',
       icon: 'warning',
       confirmButtonText: 'Yes',
       denyButtonText: 'No',
