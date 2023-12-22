@@ -24,11 +24,10 @@ async function importFlashConfig(response, device) {
     })
     return
   }
-  console.log(response.devices)
   Object.keys(response.devices).forEach(element => {
     if (element == device) {
-      console.log(response.devices[element])
-      deviceStore.flashObject = response.devices[element]
+      deviceStore.package = response.devices[element].package
+      deviceStore.skipSuperUpdate = response.devices[element].skipSuperUpdate
     }
   });
   // iterate over object

@@ -59,7 +59,7 @@ async function checkUnlockState() {
         <o-step-item step="2" label="Unlock">
           <UnlockDeviceStep @unlockCompleted="activeStep = 3" :manufacturer="manufacturer"/>
         </o-step-item>
-        <o-step-item step="3" label="Files">
+        <o-step-item step="3" label="Download">
           <FlashConfiguratorStep v-if="activeStep == 3" @flash="activeStep = 4"/>
         </o-step-item>
         <o-step-item step="4" label="Install">
@@ -70,11 +70,11 @@ async function checkUnlockState() {
     <section id="fot">
       <footer>
         <span>
-          Made with <o-icon icon="heart"/> by <a href="https://github.com/100Daisy" target="_blank">100Daisy</a>
+          Made with <o-icon icon="heart"/>
         </span>
         <span id="icons">
           <o-icon clickable @click="redirect('https://paypal.me/100Daisy')" size="medium" pack="fab" icon="paypal"/>
-          <o-icon clickable @click="redirect('https://www.patreon.com/100Daisy')" size="medium" pack="fab" icon="patreon"/>
+          <o-icon clickable @click="redirect('https://t.me/GitDaisyShitposting')" size="medium" pack="fab" icon="telegram"/>
           <o-icon clickable @click="redirect('https://github.com/100Daisy/androidflasher')" size="medium" pack="fab" icon="github"/>
         </span>
       </footer>

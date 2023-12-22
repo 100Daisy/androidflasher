@@ -1,6 +1,5 @@
 <script setup>
 import Swal from 'sweetalert2';
-import disableVerifyVbmeta from 'vbmeta-disabler';
 import { ref } from 'vue';
 import { useDeviceStore } from '@/stores/devices';
 
@@ -11,35 +10,30 @@ const deviceStore = useDeviceStore();
 const device = deviceStore.device;
 const latestLine = ref('');
 const progress = ref(0);
-const data = deviceStore.flashObject.files;
 
 async function startFlashing() {
   progress.value = 0;
-  let curr_progress = -1;
-  for (let i = 0; i < data.length; i++) {
-    curr_progress++;
-    if (data[i].slot != null) { 
-      console.log("Switching slot")
-      await device.runCommand(`set_active:${data[i].slot}`);
-    }
-    latestLine.value = `Flashing ${data[i].filename}...`;
-    if (data.options?.disableVerity && data[i].partition == 'vbmeta') {
-      const vbmeta = await disableVerifyVbmeta(data[i].blob);
-      await device.flashBlob(data[i].partition, vbmeta, (t) => {
-        // take progress.value every iteration and add progress to it
-        progress.value = curr_progress + t;
-      })
-      continue;
-    }
-    await device.flashBlob(data[i].partition, data[i].blob, (t) => {
-      console.log(t)
-      // take progress.value every iteration and add progress to it
-      progress.value = curr_progress + t;
+  if (deviceStore.package) {
+    console.log(deviceStore.package)
+    await device.flashFactoryZip(deviceStore.package, {wipe: deviceStore.wipe, skipSuperUpdate: deviceStore.skipSuperUpdate}, (action, item) => {
+      console.log("received reconnect: " + action)
+      latestLine.value = `Reconnecting to ${item}... ${action}`;
+    }, (action, item, p) => {
+      switch (action) {
+        case 'unpack':
+            latestLine.value = `Unpacking ${item}`;
+            progress.value = p;
+            break;
+          case 'flash':
+            latestLine.value = `Flashing ${item}`;
+            progress.value = p;
+            break;
+          case 'reboot':
+            latestLine.value = `Rebooting ${item}...`;
+            progress.value = p;
+          break;
+      }
     })
-  }
-  if (data.options?.cleanFlash) {
-    latestLine.value = 'Erasing userdata...';
-    await deviceStore.device.runCommand(`erase:userdata`);
   }
 }
 
@@ -62,7 +56,7 @@ startFlashing().then(() => {
     <main>
       <o-icon icon="bolt" size="large" />
       <FlashLog :latest-line="latestLine" :opacity-decrease="0.3" :maxLines="6"/>
-      <ProgressBar :progress="progress" :parts="data.length" style="width: 80%;"/>
+      <ProgressBar :progress="progress" :parts="1" style="width: 80%;"/>
     </main>
 </template>
 

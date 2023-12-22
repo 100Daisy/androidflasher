@@ -8,7 +8,8 @@ export const useDeviceStore = defineStore('devices', {
         device: FastbootDevice,
         manufacturer: String,
         isUnlocked: Boolean,
-        flashObject: Object,
+        package: String,
+        wipe: Boolean,
         isABDevice: Boolean,
     }
   }
