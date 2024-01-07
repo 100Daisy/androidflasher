@@ -15,7 +15,7 @@ async function startFlashing() {
   progress.value = 0;
   if (deviceStore.package) {
     console.log(deviceStore.package)
-    await device.flashFactoryZip(deviceStore.package, {wipe: deviceStore.wipe, skipSuperUpdate: deviceStore.skipSuperUpdate}, (action, item) => {
+    await device.flashFactoryZip(deviceStore.package, { skipSuperUpdate: deviceStore.skipSuperUpdate }, (action, item) => {
       console.log("received reconnect: " + action)
       latestLine.value = `Reconnecting to ${item}... ${action}`;
     }, (action, item, p) => {
